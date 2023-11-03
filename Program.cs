@@ -2,20 +2,44 @@
 string folderPath = @"D:\Downloads\Downloads-FullQuality\Soundeo\Peak-Soundeo";
 string txtFilePath = @"C:\Users\marlo\Desktop\testepsytrance.txt";
 
+string fomatedFile = ClearFile(txtFilePath);
+string[] fomatedFileFileNames = fomatedFile.Split("\n");
+
 List<string> fileNames = GetFileNames(folderPath);
-
-
-
-List<string> containedFileNames = CheckFilesInTxt(txtFilePath, fileNames);
 
 Console.WriteLine($"Quantidade de arquivos na pasta: {folderPath}");
 Console.WriteLine($"{fileNames.Count}\n\n");
 
-// Imprime os nomes dos arquivos que foram encontrados no arquivo TXT.
-foreach (var fileName in containedFileNames)
-{
-    //Console.WriteLine($"{fileName} encontrado no arquivo TXT.");
+List<string> containedFileNames = CheckFilesInTxt(fomatedFileFileNames, fileNames);
 
+
+
+static string ClearFile(string txtContent)
+{
+    string newFile = "";
+    var textContent = File.ReadAllText(txtContent).Split("\n");
+    int cont = 0;
+
+    string[] totalTracks = new string[190];
+    List<string> fixNames = new List<string>();
+
+    //Creating an array to numbers of tracks
+    for (int i = 0; i < totalTracks.Length; i++)
+    {
+        totalTracks[i] = (i + 1) + "\r";
+    }
+
+    for (int i = 0; i < textContent.Length; i++)
+    {
+        if (textContent[i] == totalTracks[cont])
+        {
+            newFile += textContent[i + 1] + '\n';
+            cont++;
+        }
+    }
+    Console.WriteLine($"Cont: {cont}");
+
+    return newFile;
 }
 
 static List<string> GetFileNames(string folderPath)
@@ -38,25 +62,30 @@ static List<string> GetFileNames(string folderPath)
     return fileNames;
 }
 
-static List<string> CheckFilesInTxt(string txtFilePath, List<string> fileNames)
+static List<string> CheckFilesInTxt(string[] txtFilePath, List<string> fileNames)
 {
     List<string> containedFileNames = new List<string>();
     List<string> notContainedFileNames = new List<string>();
 
     int itensEncontrados = 0;
-    // Lê o conteúdo do arquivo TXT.
-    string txtContent = File.ReadAllText(txtFilePath);
-
-    var text = ClearFile(txtContent);
 
     // Verifica se cada nome de arquivo está contido no conteúdo do arquivo TXT.
-    foreach (string fileName in fileNames)
+    foreach (string fileName in txtFilePath)
     {
-        if (txtContent.Contains(fileName))
+        bool found = false; // Variável para indicar se o arquivo foi encontrado.
+        foreach (string file in fileNames)
         {
-            containedFileNames.Add(fileName);
-            itensEncontrados++;
-        } else
+            if (fileName.Contains(file))
+            {
+                containedFileNames.Add(fileName);
+                itensEncontrados++;
+                found = true;
+                break; // Sai do loop interno, pois o arquivo já foi encontrado.
+            }
+        }
+
+        // Se o arquivo não foi encontrado, adiciona à lista de não encontrados.
+        if (!found)
         {
             notContainedFileNames.Add(fileName);
         }
@@ -64,46 +93,18 @@ static List<string> CheckFilesInTxt(string txtFilePath, List<string> fileNames)
 
     Console.WriteLine($"Itens encontrados: {itensEncontrados}\n\n");
 
+    // Imprime os itens não encontrados.
+    Console.WriteLine("Itens não encontrados:");
     foreach (string fileName in notContainedFileNames)
     {
-        Console.WriteLine($"Itens não encontrados: {fileName}");
+        Console.WriteLine(fileName);
     }
 
     return containedFileNames;
 }
 
-static string ClearFile(string txtContent)
-{
-    string nova = "";
-    var conteudoDoTexto = txtContent.Split("\n");
 
-    string[] totalTracks = new string[182];
-    List<string> nomesCorrigidos = new List<string>();
 
-    for (int i = 0; i < totalTracks.Length; i++)
-    {
-        totalTracks[i] = (i+1)+"\r";
-    }
-
-    int cont = 0;
-    for (int i = 0; i < conteudoDoTexto.Length; i++)
-    {
-        if (conteudoDoTexto[i] == totalTracks[cont]) 
-        {
-            nova += conteudoDoTexto[i+1]+'\n';
-            cont++;
-        }
-    }
-    Console.WriteLine($"Cont: {cont}");
-    Console.WriteLine(nova);
-
-    foreach (string str in nomesCorrigidos)
-    {
-        Console.WriteLine(str);
-    }
-
-    return "";
-}
 
 //for (int z = 0; i < totalTracks.Length; i++)
 //{
