@@ -1,27 +1,29 @@
-﻿// Substitua pelo caminho real da pasta e do arquivo TXT.
+﻿// Main method
+
 string folderPath = @"D:\Downloads\Downloads-FullQuality\Soundeo\Peak-Soundeo";
 string txtFilePath = @"C:\Users\marlo\Desktop\testepsytrance.txt";
-
-string fomatedFile = ClearFile(txtFilePath);
-string[] fomatedFileFileNames = fomatedFile.Split("\n");
+int trackNumber = 190;
 
 List<string> fileNames = GetFileNames(folderPath);
 
-Console.WriteLine($"Quantidade de arquivos na pasta: {folderPath}");
-Console.WriteLine($"{fileNames.Count}\n\n");
+Console.WriteLine($"Numbers of files(.wav) in the local folder: {fileNames.Count}");
 
-List<string> containedFileNames = CheckFilesInTxt(fomatedFileFileNames, fileNames);
+string fomatedFile = ClearTextFileFromBeatport(txtFilePath, trackNumber);
+string[] fomatedFileFileNames = fomatedFile.Split("\n");
 
+CheckFilesInTxt(fomatedFileFileNames, fileNames);
 
+//
+// Methods
+//
 
-static string ClearFile(string txtContent)
+static string ClearTextFileFromBeatport(string txtContent, int trackNumber)
 {
     string newFile = "";
     var textContent = File.ReadAllText(txtContent).Split("\n");
     int cont = 0;
 
-    string[] totalTracks = new string[190];
-    List<string> fixNames = new List<string>();
+    string[] totalTracks = new string[trackNumber];
 
     //Creating an array to numbers of tracks
     for (int i = 0; i < totalTracks.Length; i++)
@@ -37,20 +39,20 @@ static string ClearFile(string txtContent)
             cont++;
         }
     }
-    Console.WriteLine($"Cont: {cont}");
+    Console.WriteLine($"Songs taken from Beatport playlist: {cont}");
 
     return newFile;
 }
 
 static List<string> GetFileNames(string folderPath)
 {
-    List<string> fileNames = new List<string>();
-    DirectoryInfo directory = new DirectoryInfo(folderPath);
+    List<string> fileNames = new();
+    DirectoryInfo directory = new(folderPath);
     FileInfo[] files = directory.GetFiles();
 
     foreach (FileInfo file in files)
     {
-        if (!file.Name.Contains(".ps1"))
+        if (!file.Name.Contains(".ps1")) //Ignore a not track file
         {
             var tratamentoNome = file.Name.Split("- ");
             tratamentoNome = tratamentoNome[1].Split(".wav");
@@ -62,10 +64,10 @@ static List<string> GetFileNames(string folderPath)
     return fileNames;
 }
 
-static List<string> CheckFilesInTxt(string[] txtFilePath, List<string> fileNames)
+static void CheckFilesInTxt(string[] txtFilePath, List<string> fileNames)
 {
-    List<string> containedFileNames = new List<string>();
-    List<string> notContainedFileNames = new List<string>();
+    List<string> containedFileNames = new();
+    List<string> notContainedFileNames = new();
 
     int itensEncontrados = 0;
 
@@ -91,25 +93,12 @@ static List<string> CheckFilesInTxt(string[] txtFilePath, List<string> fileNames
         }
     }
 
-    Console.WriteLine($"Itens encontrados: {itensEncontrados}\n\n");
+    Console.WriteLine($"\n\nItems from Beatport's txtFile found in the local folder: {itensEncontrados}\n");
 
     // Imprime os itens não encontrados.
-    Console.WriteLine("Itens não encontrados:");
+    Console.WriteLine("Items not found:");
     foreach (string fileName in notContainedFileNames)
     {
         Console.WriteLine(fileName);
     }
-
-    return containedFileNames;
 }
-
-
-
-
-//for (int z = 0; i < totalTracks.Length; i++)
-//{
-//    if (conteudoDoTexto[z] == totalTracks[z])
-//    {
-//        nomesCorrigidos.Add(conteudoDoTexto[z + 1]);
-//    }
-//}
