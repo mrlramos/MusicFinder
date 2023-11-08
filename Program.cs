@@ -1,7 +1,7 @@
 ﻿// Main method
 
-string folderPath = @"D:\Downloads\Downloads-FullQuality\Soundeo\Peak-Soundeo";
-string txtFilePath = @"C:\Users\marlo\Desktop\testepsytrance.txt";
+string folderPath = @"D:\Downloads\Downloads-FullQuality\Soundeo\Hard-Soundeo";
+string txtFilePath = @"C:\Users\marlo\Desktop\Hard.txt";
 int trackNumber = 190;
 
 List<string> fileNamesLocalFolder = GetFileNamesInTheLocalFolder(folderPath);
@@ -12,6 +12,7 @@ string cleanTextFromBeatport = ClearTextFileFromBeatport(txtFilePath, trackNumbe
 string[] arrCleanTextFromBeatport = cleanTextFromBeatport.Split("\n");
 
 CheckTracks(arrCleanTextFromBeatport, fileNamesLocalFolder);
+
 
 //
 // Methods
